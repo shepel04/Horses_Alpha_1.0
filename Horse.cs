@@ -24,6 +24,7 @@ namespace Horses
         private static Random random = new Random();
         private double speed = random.Next(200, 501) / 100.0;
         private Canvas canvas;
+        private double bet = 0;
         private double step = 0.7;
         private double way = 0;
         private double coefficient = random.Next(101, 201) / 100.0;
@@ -31,6 +32,7 @@ namespace Horses
         private bool isPassingStarted = false;
         private bool isRead = false;
         private bool isFirst = false;
+        private bool isPlaced = false;
         DateTime startTime = new DateTime();
         DateTime finishTime = new DateTime();
 
@@ -61,6 +63,12 @@ namespace Horses
         {
             get { return passingTime; }
             private set { passingTime = value; }
+        }
+
+        public double Bet
+        {
+            get { return bet; }
+            set { bet = value; }
         }
 
         public double Speed
@@ -129,6 +137,12 @@ namespace Horses
         {
             get { return isFirst; }
             set { isFirst = value; }
+        }
+
+        public bool IsPlaced
+        {
+            get { return isPlaced; }
+            set { isPlaced = value; }
         }
 
         public void HandleTimerEvent()

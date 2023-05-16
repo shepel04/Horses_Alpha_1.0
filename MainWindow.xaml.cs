@@ -42,10 +42,15 @@ namespace Horses
         DispatcherTimer checker = new DispatcherTimer();
         int finishCounter = 0;
         bool isFirstHorse = false;
-        double currentBet;
-        string nameIsBettingTo;
+        bool isFirstBetPlaced = false;
+        bool isShowedDialog = false;
+        bool isCanShow = false;
+        bool isOneRaceEnded = false;
+        List<string> namesIsBettingTo = new List<string>();
         int counterForLabels = 0;
         int amountOfParticipants = 5;
+        double lostedMoney = 0;
+        double addedMoney = 0;
 
 
         public MainWindow()
@@ -109,11 +114,27 @@ namespace Horses
             }
             else PlaceBetButton.IsEnabled = false;
 
-            if (currentBet == 0)
+            if (namesIsBettingTo.Count == 0)
             {
                 StartRaceBtn.IsEnabled = false;
             }
             else StartRaceBtn.IsEnabled = true;
+
+            if (isFirstBetPlaced)
+            {
+                foreach (var item in namesIsBettingTo)
+                {
+                    if (HorseNameLabel.Content.ToString() == item)
+                    {
+                        PlaceBetButton.IsEnabled = false;
+                    }
+                }
+            }
+
+            
+            
+            
+            
         }
 
         private void AnimationBackground()
@@ -149,31 +170,30 @@ namespace Horses
                             item.IsFirst = true;
                             isFirstHorse = true;
                         }
-
-                        if (nameIsBettingTo == item.Name && item.IsFirst)
+                        foreach (var name in namesIsBettingTo)
                         {
-                            double newUserBalance = (GetTBToInt(UserBalance) - currentBet) + RecountingUserBalance(item);
-                            UserBalance.Text = newUserBalance.ToString();
-                            MessageBox.Show($"You won {RecountingUserBalance(item)}$");
-                        }
-                        else if (nameIsBettingTo == item.Name && !item.IsFirst)
-                        {
-                            double newUserBalance = GetTBToInt(UserBalance) - currentBet;
-                            UserBalance.Text = newUserBalance.ToString();
-                            MessageBox.Show($"You lost {currentBet}$");
-                            if (newUserBalance <= 0)
+                            if (name == item.Name && item.IsFirst)
                             {
-                                MessageBox.Show("Bro, you got into debt. Prepare the kidney");
+                                addedMoney = RecountingUserBalance(item);
+                                UserBalance.Text = (GetTBToInt(UserBalance) + addedMoney).ToString();
+                                lostedMoney -= addedMoney;
+                                
                             }
-                            if (newUserBalance < GetTBToInt(AmountOfParticipants))
+                            else if (name == item.Name && !item.IsFirst)
                             {
-                                PlaceBetButton.IsEnabled = false;
+                                //if (GetTBToInt(UserBalance) < GetTBToInt(BetAmountTextBlock))
+                                //{
+                                //    PlaceBetButton.IsEnabled = false;
+                                //}
+
+                                StartRaceBtn.IsEnabled = false;
+
+
                             }
-
-                            StartRaceBtn.IsEnabled = false;
-                            
-
                         }
+
+                        isCanShow = true;
+
 
                     }
                 }
@@ -181,26 +201,54 @@ namespace Horses
                 
             }
 
+            if (!isShowedDialog && isCanShow && lostedMoney != 0)
+            {
+                if (addedMoney != 0)
+                {
+                    MessageBox.Show($"You won {addedMoney}$");
+                }
+
+                if (lostedMoney != 0)
+                {
+                    MessageBox.Show($"You lost {lostedMoney}$");
+                }
+
+                if (GetTBToInt(UserBalance) <= 0)
+                {
+                    MessageBox.Show("Bro, you got into debt. Prepare the kidney");
+                }
+                
+                isShowedDialog = true;
+            }
+
+            
+            
+
+
             if (finishCounter == GetTBToInt(AmountOfParticipants))
             {
                 animTimer.Stop();
                 animTimer.IsEnabled = false;
-                PlacedToTB.Text = String.Empty;
+                PlacedToListBox.Items.Clear();
                 if (GetTBToInt(BetAmountTextBlock) > GetTBToInt(UserBalance))
                 {
                     PlaceBetButton.IsEnabled = false;
                 }
                 else PlaceBetButton.IsEnabled = true;
 
+                isOneRaceEnded = true;
+                isFirstBetPlaced = false;
+
             }
 
+            
 
         }
 
         private double RecountingUserBalance(Horse horse)
         {
             double currentUserBalance = 0;
-            currentUserBalance = currentBet * horse.Coefficient;
+            currentUserBalance = horse.Bet * horse.Coefficient;
             return currentUserBalance;
         }
 
@@ -326,7 +374,9 @@ namespace Horses
             
             animTimer.IsEnabled = true;
             animTimer.Start();
-               
+            PlaceBetButton.IsEnabled = false;
+           
+
             foreach (Horse horse in participants)
             {
                 // Create a new DispatcherTimer for each Horse object
@@ -452,6 +502,11 @@ namespace Horses
                 isFirstHorse = false;
                 HorseNameLabel.Content = participants[0].Name.ToString();
                 RaceData.ItemsSource = participants;
+                isShowedDialog = false;
+                lostedMoney = 0;
+                isFirstBetPlaced = false;
+                isCanShow = false;
+                namesIsBettingTo.Clear();
             });
 
         }
@@ -489,10 +544,21 @@ namespace Horses
 
         private void PlaceBet_Click(object sender, RoutedEventArgs e)
         {
-            currentBet = GetTBToInt(BetAmountTextBlock);
-            nameIsBettingTo = HorseNameLabel.Content.ToString();
-            PlaceBetButton.IsEnabled = false;
-            PlacedToTB.Text = nameIsBettingTo.ToString();
+            foreach (var item in participants)
+            {
+                if (HorseNameLabel.Content.ToString() == item.Name)
+                {
+                    item.Bet = GetTBToInt(BetAmountTextBlock);
+                    lostedMoney += GetTBToInt(BetAmountTextBlock);
+                }
+            }
+            namesIsBettingTo.Add(HorseNameLabel.Content.ToString());
+            
+            PlacedToListBox.Items.Add(HorseNameLabel.Content.ToString());
+
+            UserBalance.Text = (GetTBToInt(UserBalance) - GetTBToInt(BetAmountTextBlock)).ToString();
+            
+            isFirstBetPlaced = true;    
         }
 
         private void Test_Click(object sender, RoutedEventArgs e)

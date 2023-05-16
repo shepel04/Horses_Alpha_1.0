@@ -43,7 +43,7 @@
             <Button x:Name="NextHorse" Content="&gt;" HorizontalAlignment="Left" Height="48" Margin="270,223,0,0" VerticalAlignment="Top" Width="48" Click="NextHorse_Click" FontSize="20"/>
             <Label x:Name="Buks_Copy" Content="$" HorizontalAlignment="Left" Height="46" Margin="329,51,0,0" VerticalAlignment="Top" Width="34" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <TextBlock x:Name="BetAmountTextBlock" TextAlignment="Right" HorizontalAlignment="Left" Height="37" Margin="147,136,0,0" TextWrapping="Wrap" Text="25" VerticalAlignment="Top" Width="52" FontSize="20"/>
-            <TextBlock x:Name="UserBalance" TextAlignment="Right" HorizontalAlignment="Left" Height="37" Margin="277,60,0,0" TextWrapping="Wrap" Text="25" VerticalAlignment="Top" Width="52" FontSize="20"/>
+            <TextBlock x:Name="UserBalance" TextAlignment="Right" HorizontalAlignment="Left" Height="37" Margin="277,60,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="52" FontSize="20"/>
             <Label Content="Settings" Margin="153,388,447,443" FontSize="28"/>
             <Label Content="Participants:" Margin="35,448,552,391" FontSize="20"/>
             <Separator HorizontalAlignment="Left" Height="32" Margin="10,366,0,0" VerticalAlignment="Top" Width="397"/>
@@ -51,10 +51,16 @@
             <Button x:Name="LessParticipantsButton" Content="-" HorizontalAlignment="Left" Height="34" Margin="174,448,0,0" VerticalAlignment="Top" Width="34" Click="LessPart_Click" FontSize="20"/>
             <Button x:Name="MoreParticipantsButton" Content="+" HorizontalAlignment="Left" Height="34" Margin="308,448,0,0" VerticalAlignment="Top" Width="34" Click="MorePart_Click" FontSize="20"/>
             <TextBlock x:Name="AmountOfParticipants" TextAlignment="Right" HorizontalAlignment="Left" Height="29" Margin="238,450,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="27" FontSize="20"/>
-            <Button x:Name="PlaceBetButton" Content="Place bet" HorizontalAlignment="Left" Height="52" Margin="23,314,0,0" VerticalAlignment="Top" Width="118" Click="PlaceBet_Click" FontSize="20"/>
+            <Button x:Name="PlaceBetButton" Content="Place bet" HorizontalAlignment="Left" Height="52" Margin="23,302,0,0" VerticalAlignment="Top" Width="118" Click="PlaceBet_Click" FontSize="20"/>
             <Button x:Name="PlaceHorses" Content="Place horses" HorizontalAlignment="Left" Height="52" Margin="142,487,0,0" VerticalAlignment="Top" Width="114" Click="PlaceHorses_Click" FontSize="20"/>
-            <TextBlock TextAlignment="Right" HorizontalAlignment="Left" Height="37" Margin="159,320,0,0" TextWrapping="Wrap" Text="Placed to: " VerticalAlignment="Top" Width="97" FontSize="20"/>
-            <TextBlock x:Name="PlacedToTB" TextAlignment="Left" HorizontalAlignment="Left" Height="37" Margin="273,320,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="148" FontSize="20"/>
+            <TextBlock TextAlignment="Right" HorizontalAlignment="Left" Height="37" Margin="159,314,0,0" TextWrapping="Wrap" Text="Placed to: " VerticalAlignment="Top" Width="97" FontSize="20"/>
+            <ListView x:Name="PlacedToListBox" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="272,304,306,538" SelectionMode="Multiple">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
 
         </Grid>
 
